@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "array": "cpp",
+        "string": "cpp",
+        "bitset": "cpp",
+        "initializer_list": "cpp",
+        "regex": "cpp",
+        "utility": "cpp",
+        "*.tcc": "cpp",
+        "system_error": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "random": "cpp",
+        "ratio": "cpp",
+        "sstream": "cpp",
+        "sysevent_impl.h": "c",
+        "stdio.h": "c",
+        "task.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
