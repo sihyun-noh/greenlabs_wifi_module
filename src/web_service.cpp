@@ -330,9 +330,9 @@ const char Web_Service::input_sensor_page[] PROGMEM = R"(
                     <td>유량 체크 센서</td>
                     <td> f </td>
                     <td><select id='flow_multiplier' name='FLOW_MULTIPLIER'>
-                      <option value='0'>사용 안 함</option>
-                      <option value='1'>x1</option>
+                      <option value='0'>0으로 전송</option>
                       <option value='10'>x10</option>
+                      <option value='50'>x50</option>
                       <option value='100'>x100</option>
                     </select></td>
                     </tr>

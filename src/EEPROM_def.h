@@ -14,7 +14,8 @@
 #define ESP_ERR_INT_BASE_LOCALPORT 0x0050                               /*!<  */
 #define ESP_ERR_INT_BASE_SEND_DELAY (ESP_ERR_INT_BASE_LOCALPORT + 0x04) /*!<  */
 #define ESP_ERR_INT_BASE_TEST (ESP_ERR_INT_BASE_LOCALPORT + 0x08)       /*!<  */
-#define ESP_ERR_INT_FLOW_MULTIPLIER (ESP_ERR_INT_BASE_LOCALPORT + 0x0C) /*!< Flow sensor scale: 1, 10, 100 */
+#define ESP_ERR_INT_FLOW_MULTIPLIER \
+  (ESP_ERR_INT_BASE_LOCALPORT + 0x0C) /*!< Flow sensor scale: 0, 10, 50, 100 */
 //#define ESP_ERR_INT_NOT_FOUND               (ESP_ERR_INT_BASE + 0x02)  /*!<  */
 //#define ESP_ERR_INT_TYPE_MISMATCH           (ESP_ERR_INT_BASE + 0x03)  /*!<  */
 //#define ESP_ERR_INT_READ_ONLY               (ESP_ERR_INT_BASE + 0x04)  /*!<  */

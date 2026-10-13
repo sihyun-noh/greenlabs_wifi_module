@@ -710,7 +710,8 @@ String checkSensor(AutoConnectAux& aux, PageArgument& arg) {
         }
 
         select_sensor_info.FLOW_MULTIPLIER = arg.arg("FLOW_MULTIPLIER").toInt();
-        if (select_sensor_info.FLOW_MULTIPLIER == 1 || select_sensor_info.FLOW_MULTIPLIER == 10 ||
+        if (select_sensor_info.FLOW_MULTIPLIER == 0 || select_sensor_info.FLOW_MULTIPLIER == 10 ||
+            select_sensor_info.FLOW_MULTIPLIER == 50 ||
             select_sensor_info.FLOW_MULTIPLIER == 100) {
           select_sensor_info.SELECT_TYPE[select_sensor_info.SELECT_MEMBER] = 'f';
           select_sensor_info.SELECT_MEMBER++;
@@ -718,7 +719,7 @@ String checkSensor(AutoConnectAux& aux, PageArgument& arg) {
           strcat(str_checkSensor_result, String(select_sensor_info.FLOW_MULTIPLIER).c_str());
           strcat(str_checkSensor_result, ",");
         } else {
-          select_sensor_info.FLOW_MULTIPLIER = 1;
+          select_sensor_info.FLOW_MULTIPLIER = 10;
         }
         /* code */
         break;
@@ -730,7 +731,7 @@ String checkSensor(AutoConnectAux& aux, PageArgument& arg) {
             // Serial.println(str_checkSensor);
             memset(select_sensor_info.SELECT_TYPE, 0x00, sizeof(select_sensor_info.SELECT_TYPE));
             select_sensor_info.SELECT_MEMBER = 0;
-            select_sensor_info.FLOW_MULTIPLIER = 1;
+            select_sensor_info.FLOW_MULTIPLIER = 10;
             strcat(str_checkSensor_result, "All disable checked sensor!");
           }
         }
