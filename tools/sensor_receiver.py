@@ -62,7 +62,7 @@ class SensorRequestHandler(BaseHTTPRequestHandler):
         print(f"Content-Type: {self.headers.get('Content-Type', '')}")
         print(displayed_body, flush=True)
 
-        self._send_json(200, {"success": True})
+        self._send_json(200, {"code": "0000", "result": "OK"})
 
     def log_message(self, message_format: str, *args: object) -> None:
         print(f"[HTTP] {self.address_string()} - {message_format % args}")

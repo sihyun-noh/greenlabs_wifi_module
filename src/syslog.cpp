@@ -368,7 +368,10 @@ int _syslog(char *message) {
   // }
 
   if (remaining < required) {
-    _filesystem_list(&syslog_list, file_name.c_str());
+    // SPIFFS log file persistence is intentionally disabled to avoid
+    // repeatedly appending runtime logs to /log_*.txt and wearing flash.
+    // Re-enable the following line if persistent diagnostic logs are needed.
+    // _filesystem_list(&syslog_list, file_name.c_str());
     while (1) {
       if (del_from_list(&syslog_list) != 0) {
         break;

@@ -22,6 +22,12 @@ curl -X POST http://localhost:8080/api/v1/wifi-sensor \
   -d '{"device_id":"test","flow":123}'
 ```
 
+정상 수신 시 펌웨어가 기대하는 형식으로 응답합니다.
+
+```json
+{"code":"0000","result":"OK"}
+```
+
 ESP32에는 서버를 실행하는 PC의 실제 IP 주소를 지정해야 합니다.
 
 ```text

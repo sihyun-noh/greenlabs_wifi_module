@@ -1977,7 +1977,7 @@ void setup() {
 
   wifi_autoconnect();
   // AWS_OTA_UPDATE();
-  otadive_update();
+  // otadive_update();
 
   /////////////// wifi_autoconnect Task Watchdog Timer init out///////////////
 
