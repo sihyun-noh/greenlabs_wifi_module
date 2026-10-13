@@ -734,12 +734,12 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
 [
   { "title":"로그", "uri":"/echo", "menu":true, "element":[
     
-    { "name": "time", "type": "ACText"},
-    { "name":"status_log_real_time_data", "type":"ACText" },
-    { "name":"status_log", "type":"ACText" },
-    { "name":"post_code_check", "type":"ACText" },
-    { "name":"get_code_check", "type":"ACText" },
-    { "name":"status_log_heap", "type":"ACText" },
+    { "name":"view_time", "type":"ACElement", "value":"<div id='time'>시간 대기 중...</div>" },
+    { "name":"view_real_time_data", "type":"ACElement", "value":"<div id='status_log_real_time_data'>센서 데이터 대기 중...</div>" },
+    { "name":"view_status_log", "type":"ACElement", "value":"<div id='status_log'>전송 데이터 대기 중...</div>" },
+    { "name":"view_post_code", "type":"ACElement", "value":"<div id='post_code_check'>POST 상태 대기 중...</div>" },
+    { "name":"view_get_code", "type":"ACElement", "value":"<div id='get_code_check'>GET 상태 대기 중...</div>" },
+    { "name":"view_heap", "type":"ACElement", "value":"<div id='status_log_heap'>메모리 상태 대기 중...</div>" },
     
     {
     "name": "js_st",
@@ -803,7 +803,8 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
         xhr_post_code_check=new XMLHttpRequest();
         xhr_post_code_check.onreadystatechange=function(){
           if(this.readyState==4&&xhr_post_code_check.status==200){
-            document.getElementById('post_code_check').innerHTML=this.responseText;
+            var target=document.getElementById('post_code_check');
+            if(target) target.textContent=this.responseText;
             }
           };
           setInterval(post_code_check,5000);
@@ -811,7 +812,8 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
         xhr_get_code_check=new XMLHttpRequest();
         xhr_get_code_check.onreadystatechange=function(){
           if(this.readyState==4&&xhr_get_code_check.status==200){
-            document.getElementById('get_code_check').innerHTML=this.responseText;
+            var target=document.getElementById('get_code_check');
+            if(target) target.textContent=this.responseText;
             }
           };
           setInterval(get_code_check,5000);
@@ -820,7 +822,8 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
         xhr_st_real_time_data=new XMLHttpRequest();
         xhr_st_real_time_data.onreadystatechange=function(){
           if(this.readyState==4&&xhr_st_real_time_data.status==200){
-            document.getElementById('status_log_real_time_data').innerHTML=this.responseText;
+            var target=document.getElementById('status_log_real_time_data');
+            if(target) target.textContent=this.responseText;
             }
           };
           setInterval(status_log_real_time_data,1000);
@@ -828,7 +831,8 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
         xhr_heap=new XMLHttpRequest();
         xhr_heap.onreadystatechange=function(){
           if(this.readyState==4&&xhr_heap.status==200){
-            document.getElementById('status_log_heap').innerHTML=this.responseText;
+            var target=document.getElementById('status_log_heap');
+            if(target) target.textContent=this.responseText;
             }
           };
           setInterval(status_log_heap,3000);
@@ -836,7 +840,8 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
         xhr_st=new XMLHttpRequest();
         xhr_st.onreadystatechange=function(){
           if(this.readyState==4&&xhr_st.status==200){
-            document.getElementById('status_log').innerHTML=this.responseText;
+            var target=document.getElementById('status_log');
+            if(target) target.textContent=this.responseText;
             }
           };
           setInterval(status_log,2000);
@@ -844,7 +849,8 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
         xhr=new XMLHttpRequest();
         xhr.onreadystatechange=function(){
           if(this.readyState==4&&xhr.status==200){
-            document.getElementById('time').innerHTML=this.responseText;
+            var target=document.getElementById('time');
+            if(target) target.textContent=this.responseText;
             }
           };
         status_log_real_time_data();
