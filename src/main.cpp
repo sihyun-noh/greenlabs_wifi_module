@@ -75,6 +75,7 @@ uint64_t chipid;
 extern char print_str[20];
 extern char send_data_node[255];
 char send_data_node_buf[255];
+char flow_data_node_buf[255];
 
 volatile int interruptCounter = 0;
 volatile int data_send_interruptCounter = 0;
@@ -204,6 +205,10 @@ void auxStatus_heap() {
 
 void auxStatus_real_time_data() {
   Server.send(200, "text/plain", send_data_node_buf);
+}
+
+void auxFlowRealTimeData() {
+  Server.send(200, "text/plain", flow_data_node_buf);
 }
 
 void auxStatus_get_code_check() {
@@ -2087,6 +2092,7 @@ void setup() {
   Server.on("/status_log", auxStatus);
   Server.on("/status_log_heap", auxStatus_heap);
   Server.on("/status_log_real_time_data", auxStatus_real_time_data);
+  Server.on("/flow_real_time_data", auxFlowRealTimeData);
   Server.on("/get_code_check", auxStatus_get_code_check);
   Server.on("/post_code_check", auxStatus_post_code_check);
 
@@ -2191,11 +2197,14 @@ void loop() {
           flowSensor.type[1] = '\0';
 
           Basic_Sonser_Get_last(L, &flowSensor);
-          strncpy(send_data_node_buf, send_data_node, sizeof(send_data_node_buf) - 1);
-          send_data_node_buf[sizeof(send_data_node_buf) - 1] = '\0';
+          strncpy(flow_data_node_buf, send_data_node, sizeof(flow_data_node_buf) - 1);
+          flow_data_node_buf[sizeof(flow_data_node_buf) - 1] = '\0';
+        } else {
+          flow_data_node_buf[0] = '\0';
         }
         digitalWrite(OUTPIN_2, LOW);  // status live LED
       } else {
+        flow_data_node_buf[0] = '\0';
         digitalWrite(OUTPIN_2, LOW);
       }  // status live LED
 

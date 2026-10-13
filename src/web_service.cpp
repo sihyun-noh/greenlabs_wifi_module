@@ -754,6 +754,7 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
     var xhr_get_code_check;
     var xhr_post_code_check;
     var xhr_st_real_time_data;
+    var xhr_flow_real_time_data;
     var xhr_heap;
     var xhr_st;
     var xhr;
@@ -774,6 +775,12 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
       xhr_st_real_time_data.open('GET', '/status_log_real_time_data');
       xhr_st_real_time_data.responseType='text';
       xhr_st_real_time_data.send();
+      }
+
+    function flow_real_time_data(){
+      xhr_flow_real_time_data.open('GET', '/flow_real_time_data');
+      xhr_flow_real_time_data.responseType='text';
+      xhr_flow_real_time_data.send();
       }
 
     function status_log_heap(){
@@ -798,6 +805,7 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
       xhr_get_code_check.abort();
       xhr_post_code_check.abort();
       xhr_st_real_time_data.abort();
+      xhr_flow_real_time_data.abort();
       xhr_heap.abort();
       xhr_st.abort();
       xhr.abort();
@@ -829,11 +837,18 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
           if(this.readyState==4&&xhr_st_real_time_data.status==200){
             var target=document.getElementById('status_log_real_time_data');
             if(target) target.textContent=this.responseText;
-            var echoTarget=document.getElementById('echo_2');
-            if(echoTarget) echoTarget.textContent=this.responseText;
             }
           };
           setInterval(status_log_real_time_data,1000);
+
+        xhr_flow_real_time_data=new XMLHttpRequest();
+        xhr_flow_real_time_data.onreadystatechange=function(){
+          if(this.readyState==4&&xhr_flow_real_time_data.status==200){
+            var target=document.getElementById('echo_2');
+            if(target) target.textContent=this.responseText;
+            }
+          };
+          setInterval(flow_real_time_data,1000);
           
         xhr_heap=new XMLHttpRequest();
         xhr_heap.onreadystatechange=function(){
@@ -861,6 +876,7 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
             }
           };
         status_log_real_time_data();
+        flow_real_time_data();
         status_log_heap();
         status_log();
         post_code_check();
