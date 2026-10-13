@@ -1960,11 +1960,9 @@ void setup() {
 
   Serial.println(isspace(select_sensor_info.SELECT_TYPE[0]));
 
-  if (select_sensor_info.SELECT_TYPE[0] == NULL) {
-    LOGI(TAG, "Input_sensor_page");
-    Portal.load(FPSTR(esp32_web_service.input_sensor_page));
-    Portal.on("/Select_sensor_check", checkSensor);
-  }
+  LOGI(TAG, "Input_sensor_page");
+  Portal.load(FPSTR(esp32_web_service.input_sensor_page));
+  Portal.on("/Select_sensor_check", checkSensor);
 
   wifi_autoconnect();
   // AWS_OTA_UPDATE();
@@ -2002,9 +2000,7 @@ void setup() {
   /////////////////////////////////////////////////////////////////////
 
   Portal.load(FPSTR(esp32_web_service.input_page));
-  Portal.load(FPSTR(esp32_web_service.input_sensor_page));
   Portal.on("/check", checkIPAddress);
-  Portal.on("/Select_sensor_check", checkSensor);
 
   Portal.load(FPSTR(esp32_web_service.Sensor_cal));
   Server.on("/PH_PV_read", PH_PV_read);
