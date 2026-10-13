@@ -329,7 +329,12 @@ const char Web_Service::input_sensor_page[] PROGMEM = R"(
                     <tr>
                     <td>유량 체크 센서</td>
                     <td> f </td>
-                    <td><input type='checkbox' id='picker_0' name='SET_SENSOR_7_2'></td>
+                    <td><select id='flow_multiplier' name='FLOW_MULTIPLIER'>
+                      <option value='0'>사용 안 함</option>
+                      <option value='1'>x1</option>
+                      <option value='10'>x10</option>
+                      <option value='100'>x100</option>
+                    </select></td>
                     </tr>
 
                     <tr>
@@ -824,6 +829,8 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
           if(this.readyState==4&&xhr_st_real_time_data.status==200){
             var target=document.getElementById('status_log_real_time_data');
             if(target) target.textContent=this.responseText;
+            var echoTarget=document.getElementById('echo_2');
+            if(echoTarget) echoTarget.textContent=this.responseText;
             }
           };
           setInterval(status_log_real_time_data,1000);
@@ -867,7 +874,7 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
 
     { "name":"echo", "type":"ACText" },
     { "name":"echo_1", "type":"ACText" },
-    { "name":"echo_2", "type":"ACText" }
+    { "name":"echo_2_view", "type":"ACElement", "value":"<div id='echo_2'>센서 데이터 대기 중...</div>" }
 
     ]
   }

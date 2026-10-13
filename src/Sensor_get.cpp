@@ -6,6 +6,7 @@
 
 static const char *TAG = "[SG]";
 Sensor_Node _Sensor;
+extern NEW_SENSOR_INFO select_sensor_info;
 
 char ch;
 String val;
@@ -27,6 +28,9 @@ int Sensor_parsing_2BYTE(char *temp, int count_val, linkedList *L) {
   data_val2 = val.toInt();
   count_val++;
   val_dec = (255 * data_val1) + data_val1 + data_val2;
+
+  if (ch == 'f')
+    val_dec *= select_sensor_info.FLOW_MULTIPLIER;
 
   if (ch == 'J' && val_dec > 32768)
     val_dec = val_dec - 65535 - 1;

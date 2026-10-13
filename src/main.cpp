@@ -436,11 +436,11 @@ String checkSensor(AutoConnectAux& aux, PageArgument& arg) {
   uint8_t SENSOR_GROUP_4_MAX = 2;
   uint8_t SENSOR_GROUP_5_MAX = 3;
   uint8_t SENSOR_GROUP_6_MAX = 5;
-  uint8_t SENSOR_GROUP_7_MAX = 2;
+  uint8_t SENSOR_GROUP_7_MAX = 1;
   uint8_t SENSOR_GROUP_8_MAX = 1;
 
   char str_checkSensor[15];
-  char str_checkSensor_result[255];
+  char str_checkSensor_result[255] = { 0 };
   select_sensor_info.SELECT_MEMBER = 0;                                                  // 理쒓�???��
   memset(select_sensor_info.SELECT_TYPE, 0x00, sizeof(select_sensor_info.SELECT_TYPE));  // ?��?���???��
 
@@ -698,16 +698,22 @@ String checkSensor(AutoConnectAux& aux, PageArgument& arg) {
               select_sensor_info.SELECT_TYPE[select_sensor_info.SELECT_MEMBER] = 'B';
               select_sensor_info.SELECT_MEMBER++;
             }
-
-            if (!strcmp(str_checkSensor, "SET_SENSOR_7_2")) {
-              select_sensor_info.SELECT_TYPE[select_sensor_info.SELECT_MEMBER] = 'f';
-              select_sensor_info.SELECT_MEMBER++;
-            }
-
             // Serial.println(str_checkSensor);
             strcat(str_checkSensor_result, str_checkSensor);
             strcat(str_checkSensor_result, ",");
           }
+        }
+
+        select_sensor_info.FLOW_MULTIPLIER = arg.arg("FLOW_MULTIPLIER").toInt();
+        if (select_sensor_info.FLOW_MULTIPLIER == 1 || select_sensor_info.FLOW_MULTIPLIER == 10 ||
+            select_sensor_info.FLOW_MULTIPLIER == 100) {
+          select_sensor_info.SELECT_TYPE[select_sensor_info.SELECT_MEMBER] = 'f';
+          select_sensor_info.SELECT_MEMBER++;
+          strcat(str_checkSensor_result, "FLOW_MULTIPLIER_");
+          strcat(str_checkSensor_result, String(select_sensor_info.FLOW_MULTIPLIER).c_str());
+          strcat(str_checkSensor_result, ",");
+        } else {
+          select_sensor_info.FLOW_MULTIPLIER = 1;
         }
         /* code */
         break;
@@ -717,8 +723,10 @@ String checkSensor(AutoConnectAux& aux, PageArgument& arg) {
           sprintf(str_checkSensor, "SET_SENSOR_%d_%d", ii, jj);
           if (arg.arg(str_checkSensor) == "on") {
             // Serial.println(str_checkSensor);
+            memset(select_sensor_info.SELECT_TYPE, 0x00, sizeof(select_sensor_info.SELECT_TYPE));
+            select_sensor_info.SELECT_MEMBER = 0;
+            select_sensor_info.FLOW_MULTIPLIER = 1;
             strcat(str_checkSensor_result, "All disable checked sensor!");
-            select_sensor_info.SELECT_TYPE[select_sensor_info.SELECT_MEMBER] = NULL;
           }
         }
         /* code */
@@ -730,12 +738,14 @@ String checkSensor(AutoConnectAux& aux, PageArgument& arg) {
 
   // eeprom saved
   EEPROM.writeString(ESP_ERR_STR_BASE_SET_SENSOR, select_sensor_info.SELECT_TYPE);
+  EEPROM.writeUInt(ESP_ERR_INT_FLOW_MULTIPLIER, select_sensor_info.FLOW_MULTIPLIER);
   EEPROM.commit();
   // eeprom saved
 
   result.value = "SET_SENSOR : " + (String)str_checkSensor_result;
   result.style = "color:red;";
-  result_2.value = "KEY_CODE : " + (String)select_sensor_info.SELECT_TYPE;
+  result_2.value = "KEY_CODE : " + (String)select_sensor_info.SELECT_TYPE +
+                   " / FLOW_MULTIPLIER : " + String(select_sensor_info.FLOW_MULTIPLIER);
   result_2.style = "color:blue;";
 
   return String("");
@@ -2010,7 +2020,6 @@ void setup() {
   Portal.on("/echo", [](AutoConnectAux& aux, PageArgument& args) {
     AutoConnectText& ac_echo = aux.getElement<AutoConnectText>("echo");
     AutoConnectText& ac_echo_1 = aux.getElement<AutoConnectText>("echo_1");
-    AutoConnectText& ac_echo_2 = aux.getElement<AutoConnectText>("echo_2");
 
     sprintf(str_buf, "SETTING : %s:%d / %s / %d", serverinfo.NEW_IP, serverinfo.NEW_PORT,
             select_sensor_info.SELECT_TYPE, serverinfo.NEW_SERVER_SEND_DELAY_SEC);
@@ -2048,7 +2057,6 @@ void setup() {
     ac_echo.value = basic_url;
     ac_echo_1.value = str_buf;
     ac_echo_1.style = "color:red;";
-    ac_echo_2.value = send_data_node_buf;
     return String();
   });
 
@@ -2181,7 +2189,15 @@ void loop() {
       memset(send_data_node, 0x00, sizeof(send_data_node));
 
       if (serverinfo.NEW_SET_MODE == 1) {
-        //Basic_Sonser_Get_last(L, newSensor);
+        if (strchr(select_sensor_info.SELECT_TYPE, 'f') != NULL) {
+          Sensor_type flowSensor = {};
+          flowSensor.type[0] = 'f';
+          flowSensor.type[1] = '\0';
+
+          Basic_Sonser_Get_last(L, &flowSensor);
+          strncpy(send_data_node_buf, send_data_node, sizeof(send_data_node_buf) - 1);
+          send_data_node_buf[sizeof(send_data_node_buf) - 1] = '\0';
+        }
         digitalWrite(OUTPIN_2, LOW);  // status live LED
       } else {
         digitalWrite(OUTPIN_2, LOW);

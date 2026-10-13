@@ -43,6 +43,11 @@ void eeprom_read_data()  //
     serverinfo.NEW_SERVER_NUM = EEPROM.readUInt(ESP_ERR_CHAR_BASE_SERVERNUM);
     serverinfo.NEW_SERVER_SEND_DELAY_SEC = EEPROM.readUInt(ESP_ERR_INT_BASE_SEND_DELAY);
     serverinfo.NEW_RESET_SET = EEPROM.readUInt(ESP_ERR_CHAR_BASE_RESET_SET);
+    select_sensor_info.FLOW_MULTIPLIER = EEPROM.readUInt(ESP_ERR_INT_FLOW_MULTIPLIER);
+    if (select_sensor_info.FLOW_MULTIPLIER != 1 && select_sensor_info.FLOW_MULTIPLIER != 10 &&
+        select_sensor_info.FLOW_MULTIPLIER != 100) {
+      select_sensor_info.FLOW_MULTIPLIER = 1;
+    }
   } else {  // 팜모닝 향 프로그램
     Serial.println("init setting value!");
 
@@ -52,6 +57,7 @@ void eeprom_read_data()  //
     EEPROM.writeUInt(ESP_ERR_CHAR_BASE_SERVERNUM, 1);
     EEPROM.writeUInt(ESP_ERR_INT_BASE_SEND_DELAY, 60);
     EEPROM.writeUInt(ESP_ERR_CHAR_BASE_RESET_SET, 1);     // 하루 한번 재시작
+    EEPROM.writeUInt(ESP_ERR_INT_FLOW_MULTIPLIER, 1);
     EEPROM.writeString(ESP_ERR_STR_RESET_TIME, "10:00");  // reset 시간
     EEPROM.writeString(ESP_ERR_STR_BASE_SET_SENSOR, "");  // sensoer_type
 
@@ -61,6 +67,7 @@ void eeprom_read_data()  //
     EEPROM.writeUInt(ESP_ERR_CHAR_BASE_SERVERNUM, 2);
     EEPROM.writeUInt(ESP_ERR_INT_BASE_SEND_DELAY, 60);
     EEPROM.writeUInt(ESP_ERR_CHAR_BASE_RESET_SET, 1);     // 하루 한번 재시작
+    EEPROM.writeUInt(ESP_ERR_INT_FLOW_MULTIPLIER, 1);
     EEPROM.writeString(ESP_ERR_STR_RESET_TIME, "10:00");  // reset 시간
     EEPROM.writeString(ESP_ERR_STR_BASE_SET_SENSOR, "");  // sensoer_type
 #endif
@@ -77,6 +84,11 @@ void eeprom_read_data()  //
     serverinfo.NEW_SERVER_NUM = EEPROM.readUInt(ESP_ERR_CHAR_BASE_SERVERNUM);
     serverinfo.NEW_SERVER_SEND_DELAY_SEC = EEPROM.readUInt(ESP_ERR_INT_BASE_SEND_DELAY);
     serverinfo.NEW_RESET_SET = EEPROM.readUInt(ESP_ERR_CHAR_BASE_RESET_SET);
+    select_sensor_info.FLOW_MULTIPLIER = EEPROM.readUInt(ESP_ERR_INT_FLOW_MULTIPLIER);
+    if (select_sensor_info.FLOW_MULTIPLIER != 1 && select_sensor_info.FLOW_MULTIPLIER != 10 &&
+        select_sensor_info.FLOW_MULTIPLIER != 100) {
+      select_sensor_info.FLOW_MULTIPLIER = 1;
+    }
   }
 
   Serial.println(serverinfo.NEW_IP);
@@ -85,5 +97,6 @@ void eeprom_read_data()  //
   Serial.println(serverinfo.NEW_SERVER_SEND_DELAY_SEC);
   Serial.println(serverinfo.NEW_RESET_SET);
   Serial.println(select_sensor_info.SELECT_TYPE);
+  Serial.println(select_sensor_info.FLOW_MULTIPLIER);
   Serial.println(serverinfo.NEW_RESET_TIME);
 }

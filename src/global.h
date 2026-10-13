@@ -73,6 +73,7 @@ typedef struct _NEW_INFO {
         0,
     };
     int SELECT_MEMBER = 0;
+    int FLOW_MULTIPLIER = 1;
 } NEW_SENSOR_INFO;
 
 struct _sensor_info {
