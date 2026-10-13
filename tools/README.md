@@ -17,7 +17,7 @@ python3 tools/sensor_receiver.py --port 9000
 ```bash
 curl http://localhost:8080/health
 
-curl -X POST http://localhost:8080/sensor-data \
+curl -X POST http://localhost:8080/api/v1/wifi-sensor \
   -H 'Content-Type: application/json' \
   -d '{"device_id":"test","flow":123}'
 ```
@@ -25,5 +25,5 @@ curl -X POST http://localhost:8080/sensor-data \
 ESP32에는 서버를 실행하는 PC의 실제 IP 주소를 지정해야 합니다.
 
 ```text
-http://192.168.0.20:8080/sensor-data
+http://192.168.0.20:8080/api/v1/wifi-sensor
 ```

@@ -8,6 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 
 MAX_BODY_SIZE = 1024 * 1024
+SENSOR_ENDPOINT = "/api/v1/wifi-sensor"
 
 
 class SensorRequestHandler(BaseHTTPRequestHandler):
@@ -29,6 +30,11 @@ class SensorRequestHandler(BaseHTTPRequestHandler):
         self._send_json(404, {"success": False, "error": "not found"})
 
     def do_POST(self) -> None:
+        request_path = self.path.split("?", 1)[0]
+        if request_path != SENSOR_ENDPOINT:
+            self._send_json(404, {"success": False, "error": "not found"})
+            return
+
         try:
             content_length = int(self.headers.get("Content-Length", "0"))
         except ValueError:
@@ -71,7 +77,7 @@ def main() -> None:
     server = ThreadingHTTPServer((args.host, args.port), SensorRequestHandler)
     print(f"센서 수신 서버 시작: http://{args.host}:{args.port}")
     print("상태 확인: GET /health")
-    print("센서 수신: POST /sensor-data")
+    print(f"센서 수신: POST {SENSOR_ENDPOINT}")
 
     try:
         server.serve_forever()
