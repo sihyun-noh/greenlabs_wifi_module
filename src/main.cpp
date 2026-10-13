@@ -1966,8 +1966,14 @@ void setup() {
   Serial.println(isspace(select_sensor_info.SELECT_TYPE[0]));
 
   LOGI(TAG, "Input_sensor_page");
-  Portal.load(FPSTR(esp32_web_service.input_sensor_page));
-  Portal.on("/Select_sensor_check", checkSensor);
+  const bool inputSensorPageLoaded =
+      Portal.load(FPSTR(esp32_web_service.input_sensor_page));
+  if (inputSensorPageLoaded) {
+    Portal.on("/Select_sensor_check", checkSensor);
+    Serial.println("input_sensor_page load OK");
+  } else {
+    Serial.println("input_sensor_page load FAILED");
+  }
 
   wifi_autoconnect();
   // AWS_OTA_UPDATE();
