@@ -2006,6 +2006,79 @@ void setup() {
   Server.on("/EC_1413_result", EC_1413_compleat);
 
   Portal.load(esp32_web_service.auxPage);
+
+  Portal.on("/echo", [](AutoConnectAux& aux, PageArgument& args) {
+    AutoConnectText& ac_echo = aux.getElement<AutoConnectText>("echo");
+    AutoConnectText& ac_echo_1 = aux.getElement<AutoConnectText>("echo_1");
+    AutoConnectText& ac_echo_2 = aux.getElement<AutoConnectText>("echo_2");
+
+    sprintf(str_buf, "SETTING : %s:%d / %s / %d", serverinfo.NEW_IP, serverinfo.NEW_PORT,
+            select_sensor_info.SELECT_TYPE, serverinfo.NEW_SERVER_SEND_DELAY_SEC);
+
+    if (serverinfo.NEW_SERVER_NUM == 1) {
+      sprintf(str_empty, " / %s", "LOCAL");
+      strcat(str_buf, str_empty);
+    } else if (serverinfo.NEW_SERVER_NUM == 2) {
+      sprintf(str_empty, " / %s", "MINI");
+      strcat(str_buf, str_empty);
+    } else {
+      sprintf(str_empty, " / %s", "AWS");
+      strcat(str_buf, str_empty);
+    }
+
+    if (serverinfo.NEW_RESET_SET == 1) {
+      sprintf(str_empty, " / %s", "RESET");
+      strcat(str_buf, str_empty);
+    } else {
+      sprintf(str_empty, " / %s", "NON");
+      strcat(str_buf, str_empty);
+    }
+
+    sprintf(str_empty, " / %s", serverinfo.NEW_RESET_TIME);
+    strcat(str_buf, str_empty);
+
+    if (serverinfo.NEW_SET_MODE == 1) {
+      sprintf(str_empty, " / %s", "REAL_MODE");
+      strcat(str_buf, str_empty);
+    } else {
+      sprintf(str_empty, " / %s", "TEST_MODE");
+      strcat(str_buf, str_empty);
+    }
+
+    ac_echo.value = basic_url;
+    ac_echo_1.value = str_buf;
+    ac_echo_1.style = "color:red;";
+    ac_echo_2.value = send_data_node_buf;
+    return String();
+  });
+
+  Portal.on("/input_page", [](AutoConnectAux& aux, PageArgument& args) {
+    AutoConnectInput& input_ip = aux.getElement<AutoConnectInput>("ipaddress");
+    AutoConnectInput& input_port = aux.getElement<AutoConnectInput>("portNum");
+    AutoConnectRadio& radio_select = aux.getElement<AutoConnectRadio>("period");
+    AutoConnectRadio& radio_select_server = aux.getElement<AutoConnectRadio>("server_selsect");
+    AutoConnectRadio& radio_set_mode = aux.getElement<AutoConnectRadio>("set_mode");
+    AutoConnectRadio& radio_reset_set = aux.getElement<AutoConnectRadio>("reset_set");
+    AutoConnectInput& input_reset_time = aux.getElement<AutoConnectInput>("reset_time");
+
+    radio_reset_set.checked = serverinfo.NEW_RESET_SET;
+    input_reset_time.value = serverinfo.NEW_RESET_TIME;
+
+    switch (serverinfo.NEW_SERVER_SEND_DELAY_SEC) {
+      case 10: radio_select.checked = serverinfo.NEW_SERVER_SEND_DELAY_SEC / 10; break;
+      case 30: radio_select.checked = serverinfo.NEW_SERVER_SEND_DELAY_SEC / 15; break;
+      case 60: radio_select.checked = serverinfo.NEW_SERVER_SEND_DELAY_SEC / 20; break;
+      case 180: radio_select.checked = serverinfo.NEW_SERVER_SEND_DELAY_SEC / 45; break;
+      default: break;
+    }
+
+    radio_set_mode.checked = serverinfo.NEW_SET_MODE;
+    radio_select_server.checked = serverinfo.NEW_SERVER_NUM;
+    input_ip.value = serverinfo.NEW_IP;
+    input_port.value = serverinfo.NEW_PORT;
+    return String();
+  });
+
   Server.on("/clock", auxClock);
   Server.on("/status_log", auxStatus);
   Server.on("/status_log_heap", auxStatus_heap);
@@ -2085,84 +2158,6 @@ void loop() {
     } else
       SYS_RESET_FLAG = 0;
     ///////////////////////////// reset_time /////////////////////////////////////
-
-    Portal.on("/echo", [](AutoConnectAux& aux, PageArgument& args) {
-      AutoConnectText& ac_echo = aux.getElement<AutoConnectText>("echo");
-      AutoConnectText& ac_echo_1 = aux.getElement<AutoConnectText>("echo_1");
-      AutoConnectText& ac_echo_2 = aux.getElement<AutoConnectText>("echo_2");
-
-      sprintf(str_buf, "SETTING : %s:%d / %s / %d", serverinfo.NEW_IP, serverinfo.NEW_PORT,
-              select_sensor_info.SELECT_TYPE, serverinfo.NEW_SERVER_SEND_DELAY_SEC);
-
-      ////////////////////////////////////////////////////////////////////////
-      if (serverinfo.NEW_SERVER_NUM == 1) {
-        sprintf(str_empty, " / %s", "LOCAL");
-        strcat(str_buf, str_empty);
-      } else if (serverinfo.NEW_SERVER_NUM == 2) {
-        sprintf(str_empty, " / %s", "MINI");
-        strcat(str_buf, str_empty);
-      } else {
-        sprintf(str_empty, " / %s", "AWS");
-        strcat(str_buf, str_empty);
-      }
-
-      ////////////////////////////////////////////////////////////////////////
-      if (serverinfo.NEW_RESET_SET == 1) {
-        sprintf(str_empty, " / %s", "RESET");
-        strcat(str_buf, str_empty);
-      } else {
-        sprintf(str_empty, " / %s", "NON");
-        strcat(str_buf, str_empty);
-      }
-      ////////////////////////////////////////////////////////////////////////
-
-      sprintf(str_empty, " / %s", serverinfo.NEW_RESET_TIME);
-      strcat(str_buf, str_empty);
-
-      ////////////////////////////////////////////////////////////////////////
-      if (serverinfo.NEW_SET_MODE == 1) {
-        sprintf(str_empty, " / %s", "REAL_MODE");
-        strcat(str_buf, str_empty);
-      } else {
-        sprintf(str_empty, " / %s", "TEST_MODE");
-        strcat(str_buf, str_empty);
-      }
-      ////////////////////////////////////////////////////////////////////////
-      ac_echo.value = basic_url;
-      ac_echo_1.value = str_buf;
-      ac_echo_1.style = "color:red;";
-      ac_echo_2.value = send_data_node_buf;
-      return String();
-    });
-
-
-    Portal.on("/input_page", [](AutoConnectAux& aux, PageArgument& args) {
-      AutoConnectInput& input_ip = aux.getElement<AutoConnectInput>("ipaddress");
-      AutoConnectInput& input_port = aux.getElement<AutoConnectInput>("portNum");
-      AutoConnectRadio& radio_select = aux.getElement<AutoConnectRadio>("period");
-      AutoConnectRadio& radio_select_server = aux.getElement<AutoConnectRadio>("server_selsect");
-      AutoConnectRadio& radio_set_mode = aux.getElement<AutoConnectRadio>("set_mode");
-      AutoConnectRadio& radio_reset_set = aux.getElement<AutoConnectRadio>("reset_set");
-      AutoConnectInput& input_reset_time = aux.getElement<AutoConnectInput>("reset_time");
-
-      radio_reset_set.checked = serverinfo.NEW_RESET_SET;
-      input_reset_time.value = serverinfo.NEW_RESET_TIME;
-
-      switch (serverinfo.NEW_SERVER_SEND_DELAY_SEC) {
-        case 10: radio_select.checked = serverinfo.NEW_SERVER_SEND_DELAY_SEC / 10; break;
-        case 30: radio_select.checked = serverinfo.NEW_SERVER_SEND_DELAY_SEC / 15; break;
-        case 60: radio_select.checked = serverinfo.NEW_SERVER_SEND_DELAY_SEC / 20; break;
-        case 180: radio_select.checked = serverinfo.NEW_SERVER_SEND_DELAY_SEC / 45; break;
-
-        default: break;
-      }
-      radio_set_mode.checked = serverinfo.NEW_SET_MODE;
-      radio_select_server.checked = serverinfo.NEW_SERVER_NUM;
-      input_ip.value = serverinfo.NEW_IP;
-      input_port.value = serverinfo.NEW_PORT;
-
-      return String();
-    });
 
     ///////////////2021.6.03 Queue add!!///////////////////////////////////
 
