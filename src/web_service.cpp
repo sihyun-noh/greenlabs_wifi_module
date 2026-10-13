@@ -853,8 +853,8 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
     </script>"},
 
     { "name":"echo", "type":"ACText" },
-    { "name":"echo_1", "type":"ACText" }
-    
+    { "name":"echo_1", "type":"ACText" },
+    { "name":"echo_2", "type":"ACText" }
 
     ]
   }

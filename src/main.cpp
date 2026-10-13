@@ -2042,7 +2042,9 @@ void setup() {
   } else {
     LOGI(TAG, "Error_async_webserver_start");
   }
+
 }
+  
 
 void loop() {
   Sensor_type* newSensor = (Sensor_type*)malloc(sizeof(Sensor_type));
@@ -2129,10 +2131,10 @@ void loop() {
       ac_echo.value = basic_url;
       ac_echo_1.value = str_buf;
       ac_echo_1.style = "color:red;";
-      ac_echo_2.value = send_data_node;
-
+      ac_echo_2.value = send_data_node_buf;
       return String();
     });
+
 
     Portal.on("/input_page", [](AutoConnectAux& aux, PageArgument& args) {
       AutoConnectInput& input_ip = aux.getElement<AutoConnectInput>("ipaddress");
@@ -2184,7 +2186,7 @@ void loop() {
       memset(send_data_node, 0x00, sizeof(send_data_node));
 
       if (serverinfo.NEW_SET_MODE == 1) {
-        // Basic_Sonser_Get_last(L, newSensor);
+        //Basic_Sonser_Get_last(L, newSensor);
         digitalWrite(OUTPIN_2, LOW);                 // status live LED
         strcpy(send_data_node_buf, send_data_node);  // web log
       } else {
@@ -2199,18 +2201,23 @@ void loop() {
     if (data_send_interruptCounter_flag)  // 10==10000ms
     {
       data_send_interruptCounter_flag = 0;
+      memset(send_data_node, 0x00, sizeof(send_data_node));
       // if (send_crc_check) {
       if (1) {
         switch (serverinfo.NEW_SERVER_NUM) {
           case 1:
             if (start_Get_flag) {
               Basic_Sonser_Get_last(L, newSensor);
+              strncpy(send_data_node_buf, send_data_node, sizeof(send_data_node_buf) - 1);  // web log
+              send_data_node_buf[sizeof(send_data_node_buf) - 1] = '\0';
               Httpdatesend_POST(L, newSensor);
               break;
             }
           case 2:
             if (start_Get_flag) {
               Basic_Sonser_Get_last(L, newSensor);
+              strncpy(send_data_node_buf, send_data_node, sizeof(send_data_node_buf) - 1);  // web log
+              send_data_node_buf[sizeof(send_data_node_buf) - 1] = '\0';
               Httpdatesend_POST(L, newSensor);
               //  Httpdatesend_GET_UPDATE_REQUEST();
               break;
