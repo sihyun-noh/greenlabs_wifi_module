@@ -798,7 +798,7 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
       xhr.abort();
       };
 
-    window.onload=function()
+    window.addEventListener('load', function()
     {
         xhr_post_code_check=new XMLHttpRequest();
         xhr_post_code_check.onreadystatechange=function(){
@@ -847,8 +847,15 @@ const char Web_Service::auxPage[] PROGMEM = R"raw(
             document.getElementById('time').innerHTML=this.responseText;
             }
           };
+        status_log_real_time_data();
+        status_log_heap();
+        status_log();
+        post_code_check();
+        get_code_check();
+        clock();
+
         setInterval(clock,2000);
-      };
+      });
 
     </script>"},
 

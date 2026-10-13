@@ -2187,8 +2187,7 @@ void loop() {
 
       if (serverinfo.NEW_SET_MODE == 1) {
         //Basic_Sonser_Get_last(L, newSensor);
-        digitalWrite(OUTPIN_2, LOW);                 // status live LED
-        strcpy(send_data_node_buf, send_data_node);  // web log
+        digitalWrite(OUTPIN_2, LOW);  // status live LED
       } else {
         digitalWrite(OUTPIN_2, LOW);
       }  // status live LED
